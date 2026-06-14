@@ -295,9 +295,35 @@
         padding-right:8px;
       }
     }
+    /* ===== Access gate ===== */
+    #gate{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;
+      background:linear-gradient(rgba(247,239,217,.55),rgba(244,234,208,.72)), url('background-site-full.png') center/cover no-repeat;}
+    #gate.hidden{display:none}
+    .gate-card{width:min(92%,420px);text-align:center;padding:44px 32px;border-radius:8px;
+      background:linear-gradient(180deg,rgba(253,247,230,.95),rgba(247,239,217,.92));
+      border:1px solid rgba(155,122,56,.4);box-shadow:0 24px 70px rgba(70,58,26,.22)}
+    .gate-mono{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:38px;color:var(--green);margin:0 0 8px}
+    .gate-card p{color:#5b543d;font-size:16px;line-height:1.5;margin:0 0 22px}
+    #gatePin{width:100%;text-align:center;letter-spacing:.45em;font-size:22px;padding:13px;border-radius:10px;
+      border:1px solid rgba(155,122,56,.45);background:rgba(255,251,242,.92);color:var(--green);font-family:Georgia,serif}
+    #gatePin:focus{outline:none;border-color:var(--gold)}
+    #gateBtn{margin-top:16px;width:100%;padding:13px;border:none;border-radius:999px;cursor:pointer;
+      background:var(--green);color:#fbf3df;font-size:14px;letter-spacing:.16em;text-transform:uppercase;font-family:Georgia,serif}
+    #gateErr{color:#8a3a28;font-size:14px;margin-top:12px;min-height:18px}
   </style>
 </head>
 <body>
+  <!-- ===== Access gate ===== -->
+  <div id="gate">
+    <div class="gate-card">
+      <div class="gate-mono">V &amp; V</div>
+      <p>Please enter the access code to view our wedding details.</p>
+      <input id="gatePin" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••" aria-label="Access code">
+      <button id="gateBtn" type="button">Enter</button>
+      <div id="gateErr"></div>
+    </div>
+  </div>
+
   <!-- Painted fallback scenery (shows only if background-site-full.png is unavailable) -->
   <div class="scenery" aria-hidden="true">
     <svg viewBox="0 0 1200 1600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
@@ -562,6 +588,44 @@
         btn.textContent = original;
       }
     });
+  </script>
+
+  <script>
+    /* ===== Access gate (soft, client-side) ===== */
+    (function(){
+      const SALT = "villahonegg-vv-2026";
+      const PIN_HASH = "9ad6b0bf3eb5fccc02a0abde78d283b070bca00bcfb6d0c7e0703c8f2f0f5415";
+      const gate = document.getElementById('gate');
+      const pin  = document.getElementById('gatePin');
+      const btn  = document.getElementById('gateBtn');
+      const err  = document.getElementById('gateErr');
+
+      function unlock(){ gate.classList.add('hidden'); document.body.style.overflow = ''; }
+
+      if (sessionStorage.getItem('vv_unlocked') === '1') {
+        unlock();
+      } else {
+        document.body.style.overflow = 'hidden';
+        pin.focus();
+      }
+
+      async function sha256(s){
+        const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+        return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+      }
+      async function tryUnlock(){
+        const h = await sha256((pin.value || '').trim() + '|' + SALT);
+        if (h === PIN_HASH){
+          sessionStorage.setItem('vv_unlocked', '1');
+          unlock();
+        } else {
+          err.textContent = 'Incorrect code — please try again.';
+          pin.value = ''; pin.focus();
+        }
+      }
+      btn.addEventListener('click', tryUnlock);
+      pin.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+    })();
   </script>
 </body>
 </html>
