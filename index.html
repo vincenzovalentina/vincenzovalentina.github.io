@@ -149,6 +149,8 @@
     .title .small{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
     .title h2{margin:10px 0 0;font-size:clamp(34px,5vw,60px);font-style:italic;font-weight:400;color:var(--green)}
     .lead{text-align:center;max-width:760px;margin:0 auto 14px;font-size:21px;line-height:1.65;color:#55503f;text-shadow:0 1px 0 rgba(255,250,240,.96)}
+    #invite .invite-frame{max-width:360px;margin:6px auto 0;border-radius:16px;overflow:hidden;border:1px solid rgba(155,122,56,.4);box-shadow:0 18px 50px rgba(70,58,26,.28);background:#1c1c1c}
+    #invite .invite-frame video{display:block;width:100%;height:auto}
 
     .schedule-board{
       max-width:900px;
@@ -388,6 +390,25 @@
       </div>
     </div>
   </header>
+
+  <section id="invite">
+    <div class="wrap">
+      <div class="section-card">
+        <div class="section-inner">
+          <div class="title">
+            <div class="small">With Love</div>
+            <h2>Our Invitation</h2>
+          </div>
+          <div class="invite-frame">
+            <video controls playsinline preload="none" poster="invitation-poster.jpg">
+              <source src="invitation.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section id="schedule">
     <div class="wrap">
