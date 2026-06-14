@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vincenzo & Valentina | Villa Honegg</title>
+  <style>
+    :root{
+      --cream:#f7f0df;
+      --paper:rgba(249,243,229,.72);
+      --paper-strong:rgba(250,245,235,.84);
+      --gold:#9b7a38;
+      --gold-soft:rgba(155,122,56,.36);
+      --ink:#5b543d;
+      --green:#59634a;
+      --shadow:0 18px 45px rgba(76,59,31,.12);
+      --radius:22px;
+      --border:1px solid rgba(155,122,56,.28);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Georgia, 'Times New Roman', serif;
+      color:var(--ink);
+      background:var(--cream);
+      min-height:100vh;
+      position:relative;
+      overflow-x:hidden;
+    }
+    /* CSS-painted fallback scenery: only visible if the background image is missing */
+    .scenery{position:fixed;inset:0;z-index:-3;overflow:hidden}
+    .scenery svg{width:100%;height:100%;display:block}
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:
+        linear-gradient(rgba(251,247,238,.42), rgba(248,242,229,.50)),
+        url('background-site-full.png') center top / cover no-repeat;
+      z-index:-2;
+    }
+    body::after{
+      content:"";
+      position:fixed;
+      inset:0;
+      background:radial-gradient(circle at 50% 20%, rgba(255,255,255,.15), transparent 40%);
+      z-index:-1;
+      pointer-events:none;
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+    nav{
+      position:fixed;
+      top:20px;
+      left:50%;
+      transform:translateX(-50%);
+      width:min(94%,1020px);
+      z-index:50;
+      background:transparent;
+      border:none;
+      border-radius:0;
+      backdrop-filter:none;
+      box-shadow:none;
+    }
+    nav .inner{display:flex;align-items:center;justify-content:center;padding:11px 18px}
+    .brand{font-size:20px;font-style:italic;color:var(--green);letter-spacing:.02em;white-space:nowrap}
+    .links{display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap}
+    .links a{font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:#556045;opacity:.98; text-shadow:0 1px 0 rgba(255,250,240,.92)}
+    .links a:hover{color:var(--gold)}
+
+    .hero{
+      padding:110px 0 46px;
+    }
+    .hero-shell{background:transparent;border:none;border-radius:0;box-shadow:none;overflow:visible;}
+    .hero-grid{
+      display:grid;
+      grid-template-columns:1fr;
+      align-items:start;
+    }
+    .video-panel{display:none;}
+    .video-panel video,
+    .video-fallback{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+    }
+    .video-fallback{background:url('background-site-full.png') center/cover no-repeat; filter:brightness(1.02) saturate(.92); border-radius:24px}
+    .video-overlay{
+      position:absolute;
+      inset:0;
+      background:linear-gradient(180deg, rgba(248,242,229,.12), rgba(248,242,229,.24)); border-radius:24px;
+    }
+    .hero-copy{
+      padding:74px 8px 24px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      text-align:center;
+      background:transparent;
+    }
+    .eyebrow{font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+    .hero-copy h1{
+      margin:0;
+      font-size:clamp(48px,7vw,84px);
+      line-height:.92;
+      font-style:italic;
+      font-weight:400;
+      color:var(--green);
+      text-wrap:balance;
+      max-width:none;
+    }
+    .hero-copy h1 span{display:block}
+    .hero-copy h2{
+      margin:10px 0 6px;
+      font-size:clamp(24px,3vw,44px);
+      color:#5f684c;
+      font-weight:400;
+      font-style:italic;
+    }
+    .hero-copy .sub{font-size:21px;color:#55503f;line-height:1.65;margin:0 0 10px;text-shadow:0 1px 0 rgba(255,250,240,.95);max-width:720px}
+    .hero-copy .place{font-size:18px;color:#565141;line-height:1.65;text-shadow:0 1px 0 rgba(255,250,240,.95);max-width:760px}
+    .divider{display:flex;align-items:center;gap:10px;margin:20px 0 16px;color:var(--gold); width:min(520px,90%)}
+    .divider::before,.divider::after{content:"";height:1px;background:linear-gradient(90deg,transparent,var(--gold-soft),transparent);flex:1}
+    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:18px;justify-content:center}
+    .btn{display:inline-block;padding:13px 22px;border-radius:999px;border:1px solid rgba(155,122,56,.26);background:rgba(255,251,241,.48);color:#5f553d;font-size:14px;letter-spacing:.08em;text-transform:uppercase;backdrop-filter:blur(4px);cursor:pointer;font-family:inherit}
+    .btn.primary{background:rgba(91,99,74,.88);color:#fffaf0;border-color:rgba(91,99,74,.88)}
+    .btn:disabled{opacity:.6;cursor:default}
+
+    section{padding:24px 0 36px}
+    .section-card{background:transparent;border:none;border-radius:0;box-shadow:none;padding:10px 0 22px;position:relative;overflow:visible;}
+    .section-card::before{display:none;}
+    .section-inner{position:relative;z-index:1}
+    .title{text-align:center;margin-bottom:20px}
+    .title .small{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold)}
+    .title h2{margin:10px 0 0;font-size:clamp(34px,5vw,60px);font-style:italic;font-weight:400;color:var(--green)}
+    .lead{text-align:center;max-width:760px;margin:0 auto 14px;font-size:18px;line-height:1.75;color:#524e40;text-shadow:0 1px 0 rgba(255,250,240,.96)}
+
+    .schedule-board{
+      max-width:900px;
+      margin:0 auto;
+      display:grid;
+      gap:16px;
+    }
+    .day-card{position:relative;background:transparent;border:none;border-radius:0;padding:10px 0 16px;box-shadow:none;overflow:visible;isolation:isolate;}
+    .day-card::before,.day-card::after{display:none;}
+    .day-card h3{margin:0 0 14px;font-size:42px;font-style:italic;font-weight:400;color:#4f5a40;text-align:center;text-shadow:0 1px 0 rgba(255,250,240,.96)}
+    .rows{display:grid;gap:9px;max-width:700px;margin:0 auto}
+    .row{display:grid;grid-template-columns:128px 1fr;gap:20px;align-items:start;padding:4px 0}
+    .row .time{font-size:20px;font-weight:700;color:#514d3b;text-align:right;text-shadow:0 1px 0 rgba(255,250,240,.96)}
+    .row .event{font-size:22px;line-height:1.45;color:#55503f;text-shadow:0 1px 0 rgba(255,250,240,.96)}
+    .day-note{text-align:center;margin-top:14px;color:#7a6d50;font-style:italic;font-size:17px}
+
+    .faq-list{max-width:880px;margin:0 auto;display:grid;gap:14px}
+    .faq-list details{background:transparent;border:none;border-bottom:1px solid rgba(155,122,56,.24);border-radius:0;padding:14px 2px 16px;}
+    .faq-list summary{cursor:pointer;list-style:none;font-size:22px;color:#4f5a40;font-style:italic; text-shadow:0 1px 0 rgba(255,250,240,.92)}
+    .faq-list summary::-webkit-details-marker{display:none}
+    .faq-list p, .faq-list li{font-size:17px;line-height:1.7;color:#575241}
+    .faq-list ul{margin:10px 0 0 20px;padding:0}
+    .faq-list a{color:var(--gold);text-decoration:underline}
+
+    .rsvp-form{max-width:860px;margin:0 auto;display:grid;gap:16px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    label{display:block;font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:#7c6c47}
+    input, textarea{
+      width:100%;
+      margin-top:7px;
+      padding:14px 15px;
+      border-radius:14px;
+      border:1px solid rgba(155,122,56,.28);
+      background:rgba(255,251,242,.58);
+      color:#534b38;
+      font-family:Georgia, 'Times New Roman', serif;
+      font-size:16px;
+    }
+    textarea{min-height:110px;resize:vertical}
+    .note{max-width:700px;margin:12px auto 0;text-align:center;color:#7c6f54;font-size:14px;line-height:1.6}
+    /* RSVP status message */
+    .rsvp-status{max-width:700px;margin:6px auto 0;text-align:center;font-size:17px;line-height:1.6;padding:14px 18px;border-radius:14px;display:none}
+    .rsvp-status.show{display:block}
+    .rsvp-status.ok{background:rgba(91,99,74,.12);border:1px solid rgba(91,99,74,.35);color:#3f4a30}
+    .rsvp-status.err{background:rgba(150,70,50,.10);border:1px solid rgba(150,70,50,.30);color:#7a3a28}
+    .footer{padding:20px 0 48px;text-align:center;color:#5d5746}
+    .footer .final{font-size:30px;font-style:italic;color:var(--green);margin-bottom:8px}
+
+    @media(max-width:900px){
+      .hero-grid{grid-template-columns:1fr}
+      .video-panel{display:none}
+      .hero-copy{padding:42px 10px 18px}
+    }
+    @media(max-width:760px){
+      nav{
+        top:12px;
+        width:min(96%, 980px);
+        border-radius:0;
+      }
+      nav .inner{
+        flex-direction:row;
+        align-items:center;
+        justify-content:center;
+        gap:0;
+        padding:10px 12px;
+      }
+      .brand{display:none}
+      .links{
+        display:flex;
+        gap:8px;
+        flex-wrap:nowrap;
+        overflow-x:auto;
+        width:100%;
+        justify-content:center;
+        padding-bottom:2px;
+        scrollbar-width:none;
+      }
+      .links::-webkit-scrollbar{display:none}
+      .links a{
+        flex:0 0 auto;
+        font-size:11px;
+        letter-spacing:.10em;
+        background:rgba(255,251,242,.18);
+        border:1px solid rgba(155,122,56,.10);
+        border-radius:999px;
+        padding:7px 10px;
+      }
+      .wrap{padding:0 14px}
+      .section-card{padding:10px 0 18px}
+      .day-card{padding:10px 0 14px}
+      .day-card h3{font-size:31px}
+      .rows{
+        width:100%;
+        max-width:360px;
+        margin-left:auto;
+        margin-right:auto;
+      }
+      .row{
+        display:flex;
+        justify-content:flex-start;
+        align-items:baseline;
+        gap:16px;
+        max-width:100%;
+        padding-left:10px;
+      }
+      .row .time{
+        flex:0 0 76px;
+        font-size:17px;
+        text-align:right;
+      }
+      .row .event{
+        flex:1 1 auto;
+        font-size:18px;
+        text-align:left;
+      }
+      .grid{grid-template-columns:1fr}
+      .hero{padding-top:88px}
+      .hero-grid{grid-template-columns:1fr}
+      .video-panel{display:none}
+      .hero-copy{order:1;padding:18px 8px 18px}
+      .eyebrow{font-size:11px;letter-spacing:.20em;margin-bottom:8px}
+      .hero-copy h1{
+        font-size:clamp(30px, 11vw, 48px);
+        line-height:.94;
+        max-width:100%;
+        letter-spacing:-.01em;
+      }
+      .hero-copy h1 span{display:block}
+      .hero-copy h1 span + span::before{content:"";}
+      .hero-copy h2{font-size:22px;margin:8px 0 4px}
+      .hero-copy .sub{font-size:16px;line-height:1.5;margin:0 0 6px;max-width:92%}
+      .hero-copy .place{font-size:15px;line-height:1.55;max-width:92%}
+      .divider{margin:14px 0 12px}
+      .cta{gap:8px;margin-top:10px}
+      .btn{padding:10px 14px;font-size:11px}
+      .faq-list{
+        width:100%;
+        max-width:360px;
+        margin-left:auto;
+        margin-right:auto;
+      }
+      .faq-list details{
+        padding-left:10px;
+        padding-right:10px;
+      }
+      .faq-list summary{
+        max-width:100%;
+        text-align:left;
+        padding-left:8px;
+        padding-right:8px;
+      }
+      .faq-list p,
+      .faq-list li{
+        padding-left:8px;
+        padding-right:8px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Painted fallback scenery (shows only if background-site-full.png is unavailable) -->
+  <div class="scenery" aria-hidden="true">
+    <svg viewBox="0 0 1200 1600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#e7ecdf"/><stop offset="45%" stop-color="#eef0e0"/><stop offset="100%" stop-color="#f3eed7"/>
+        </linearGradient>
+        <linearGradient id="mtnFar" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aebbb4"/><stop offset="100%" stop-color="#c4cabb"/></linearGradient>
+        <linearGradient id="mtnNear" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8e9d86"/><stop offset="100%" stop-color="#aab59a"/></linearGradient>
+        <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cdd6cf"/><stop offset="35%" stop-color="#b9c7c6"/><stop offset="100%" stop-color="#dfe2cf"/></linearGradient>
+      </defs>
+      <rect width="1200" height="1600" fill="url(#sky)"/>
+      <ellipse cx="320" cy="230" rx="260" ry="60" fill="#fbf8ee" opacity=".55"/>
+      <ellipse cx="860" cy="170" rx="300" ry="66" fill="#fbf8ee" opacity=".5"/>
+      <path d="M0 560 L150 420 L300 520 L460 380 L620 510 L780 400 L960 520 L1120 430 L1200 500 L1200 760 L0 760 Z" fill="url(#mtnFar)" opacity=".85"/>
+      <path d="M0 700 L180 560 L360 680 L520 540 L700 690 L880 560 L1050 690 L1200 600 L1200 880 L0 880 Z" fill="url(#mtnNear)" opacity=".9"/>
+      <rect y="820" width="1200" height="780" fill="url(#lake)"/>
+      <g stroke="#ffffff" stroke-opacity=".30" stroke-width="3" fill="none">
+        <path d="M120 980 q120 -22 240 0"/><path d="M700 1050 q140 -24 280 0"/><path d="M260 1180 q160 -26 320 0"/><path d="M140 1380 q170 -28 340 0"/>
+      </g>
+    </svg>
+  </div>
+
+  <nav>
+    <div class="inner wrap" style="padding-left:18px;padding-right:18px;max-width:none;">
+      <div class="links">
+        <a href="#home">Home</a>
+        <a href="#schedule">Schedule</a>
+        <a href="#faq">FAQ</a>
+        <a href="#rsvp">RSVP</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="hero" id="home">
+    <div class="wrap">
+      <div class="hero-shell">
+        <div class="hero-grid">
+          <div class="video-panel">
+            <div class="video-fallback"></div>
+            <video autoplay muted loop playsinline poster="background-site-full.png">
+              <source src="assets/opening-video.mp4" type="video/mp4">
+            </video>
+            <div class="video-overlay"></div>
+          </div>
+          <div class="hero-copy">
+            <h1><span>Vincenzo &amp;</span><span>Valentina</span></h1>
+            <div class="divider">♥</div>
+            <h2>5 — 7 September 2026</h2>
+            <p class="sub">A wedding weekend in the Swiss mountains.</p>
+            <p class="place">Ennetbürgen · Switzerland<br>Villa Honegg<br>Lake views, white roses, elegant celebrations and unforgettable moments with all of you.</p>
+            <div class="cta">
+              <a class="btn primary" href="#rsvp">RSVP</a>
+              <a class="btn" href="#schedule">View Schedule</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <section id="schedule">
+    <div class="wrap">
+      <div class="section-card">
+        <div class="section-inner">
+          <div class="title">
+            <div class="small">Weekend Plan</div>
+            <h2>Schedule</h2>
+          </div>
+          <p class="lead">The full plan for the wedding weekend at Villa Honegg.</p>
+          <div class="schedule-board">
+            <div class="day-card sat">
+              <h3>Saturday, 5 September</h3>
+              <div class="rows">
+                <div class="row"><div class="time">15:00</div><div class="event">Arrival · Rooms available</div></div>
+                <div class="row"><div class="time">18:00</div><div class="event">Aperitif</div></div>
+                <div class="row"><div class="time">19:00</div><div class="event">Welcome Barbecue · Smart Casual</div></div>
+              </div>
+            </div>
+            <div style="height:1px;background:linear-gradient(90deg,transparent, rgba(155,122,56,.35), transparent); max-width:460px; margin:8px auto 24px;"></div><div class="day-card sun">
+              <h3>Sunday, 6 September</h3>
+              <div class="rows">
+                <div class="row"><div class="time">16:00</div><div class="event">Ceremony &amp; Reception</div></div>
+                <div class="row"><div class="time">19:00</div><div class="event">Dinner</div></div>
+                <div class="row"><div class="time">22:00</div><div class="event">Opening Dance</div></div>
+                <div class="row"><div class="time">00:00</div><div class="event">Midnight Pool Party</div></div>
+              </div>
+            </div>
+            <div style="height:1px;background:linear-gradient(90deg,transparent, rgba(155,122,56,.35), transparent); max-width:460px; margin:8px auto 24px;"></div><div class="day-card mon">
+              <h3>Monday, 7 September</h3>
+              <div class="rows">
+                <div class="row"><div class="time">12:00</div><div class="event">Checkout</div></div>
+                <div class="row"><div class="time">Until 14:00</div><div class="event">Food & refreshments available</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="section-card">
+        <div class="section-inner">
+          <div class="title">
+            <div class="small">Guest Information</div>
+            <h2>FAQ</h2>
+          </div>
+          <div class="faq-list">
+            <details>
+              <summary>How do I get to Villa Honegg?</summary>
+              <p>The easiest way to reach Villa Honegg is by car.</p>
+              <ul>
+                <li>Zurich Airport: approximately 1 hour by car</li>
+                <li>Basel Airport: approximately 1 hour 30 minutes by car</li>
+              </ul>
+              <p>Taxi, private transfer and rental car services are available from both airports.</p>
+            </details>
+            <details>
+              <summary>Is parking available?</summary>
+              <p>Yes. Parking is available for guests at Villa Honegg.</p>
+            </details>
+            <details>
+              <summary>What is the dress code?</summary>
+              <p>Saturday evening welcome aperitif and barbecue: <strong>Smart Casual</strong>.</p>
+              <p>Sunday ceremony, reception and evening celebrations: <strong>Formal Attire</strong>.</p>
+            </details>
+            <details>
+              <summary>Can I arrive before check-in?</summary>
+              <p>Rooms will be available from 15:00 on Saturday, 5 September 2026. Guests arriving earlier are welcome to enjoy the hotel grounds and common areas.</p>
+            </details>
+            <details>
+              <summary>What facilities are available at Villa Honegg?</summary>
+              <p>Guests can enjoy the infinity pool, spa &amp; wellness area, fitness centre, restaurant &amp; bar, panoramic lake and mountain views, and beautiful outdoor terraces.</p>
+              <p>For additional information and facilities, please visit the <a href="https://villa-honegg.ch/en/" target="_blank" rel="noopener">official Villa Honegg website</a>.</p>
+            </details>
+            <details>
+              <summary>What time is checkout?</summary>
+              <p>Checkout is at 12:00 on Monday, 7 September 2026. Food and refreshments will still be available until 14:00.</p>
+            </details>
+            <details>
+              <summary>What is the address?</summary>
+              <p>Villa Honegg<br>Honegg 1<br>6373 Ennetbürgen<br>Switzerland</p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rsvp">
+    <div class="wrap">
+      <div class="section-card">
+        <div class="section-inner">
+          <div class="title">
+            <div class="small">Kindly Reply</div>
+            <h2>RSVP</h2>
+          </div>
+          <p class="lead">Please let us know your details, any accompanying guests, dietary requirements, and your arrival and departure plans.</p>
+          <form class="rsvp-form" id="rsvpForm">
+            <div class="grid">
+              <label>Name<input name="name" required placeholder="First name"></label>
+              <label>Surname<input name="surname" required placeholder="Surname"></label>
+            </div>
+            <label>Guests coming with you<textarea name="guests" placeholder="Please add the full names of any additional guests"></textarea></label>
+            <label>Dietary requirements<textarea name="dietary" placeholder="Allergies, intolerances, vegetarian, vegan, etc."></textarea></label>
+            <div class="grid">
+              <label>Arrival<input name="arrival" placeholder="e.g. Saturday 5 September, 15:00"></label>
+              <label>Departure<input name="departure" placeholder="e.g. Monday 7 September, 12:00"></label>
+            </div>
+            <label>Additional note<textarea name="message" placeholder="Anything else we should know?"></textarea></label>
+            <div class="cta" style="justify-content:center">
+              <button class="btn primary" type="submit" id="rsvpSubmit">Confirm RSVP</button>
+            </div>
+            <div class="rsvp-status" id="rsvpStatus" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="wrap">
+      <div class="final">Celebrating a True Love Story</div>
+      <div>Vincenzo &amp; Valentina · Villa Honegg · 5—7 September 2026</div>
+    </div>
+  </footer>
+
+  <script>
+    /* ============================================================
+       RSVP backend wiring (Google Sheet via Apps Script web app)
+       1) Deploy the Apps Script (see Code.gs) as a Web App.
+       2) Paste its /exec URL between the quotes below.
+       Until you do, the form falls back to opening an email draft.
+       ============================================================ */
+    const API_URL = "https://script.google.com/macros/s/AKfycbxf7Qyvss6EH8r1fIUuVFt6nY4xJpVI6RYmxv7K5cK4xGOZYGbtuZvwqPxB29UGUl0SRQ/exec";
+
+    const form   = document.getElementById('rsvpForm');
+    const btn    = document.getElementById('rsvpSubmit');
+    const status = document.getElementById('rsvpStatus');
+
+    function data(){ return Object.fromEntries(new FormData(form).entries()); }
+
+    function showStatus(kind, msg){
+      status.className = 'rsvp-status show ' + kind;
+      status.textContent = msg;
+    }
+
+    // text/plain + no custom headers => no CORS preflight => works against Apps Script
+    async function apiPost(payload){
+      const r = await fetch(API_URL, {
+        method:'POST',
+        headers:{ 'Content-Type':'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+      return r.json();
+    }
+
+    function mailtoFallback(d){
+      const body = `RSVP for Vincenzo & Valentina Wedding%0D%0A%0D%0AName: ${d.name||''} ${d.surname||''}%0D%0AGuests: ${d.guests||''}%0D%0ADietary requirements: ${d.dietary||''}%0D%0AArrival: ${d.arrival||''}%0D%0ADeparture: ${d.departure||''}%0D%0AMessage: ${d.message||''}`;
+      window.location.href = `mailto:?subject=RSVP - Vincenzo & Valentina Wedding&body=${body}`;
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const d = data();
+
+      // If the endpoint hasn't been configured yet, fall back to an email draft.
+      if (!API_URL || API_URL.indexOf('PASTE_') === 0) {
+        mailtoFallback(d);
+        return;
+      }
+
+      btn.disabled = true;
+      const original = btn.textContent;
+      btn.textContent = 'Sending…';
+      showStatus('ok', 'Sending your RSVP…');
+
+      try {
+        const record = {
+          id: ((d.name||'') + ' ' + (d.surname||'')).trim().toLowerCase(),
+          name: d.name || '',
+          surname: d.surname || '',
+          guests: d.guests || '',
+          dietary: d.dietary || '',
+          arrival: d.arrival || '',
+          departure: d.departure || '',
+          message: d.message || ''
+        };
+        const res = await apiPost({ type: 'rsvp', record });
+        if (res && res.ok) {
+          form.reset();
+          showStatus('ok', 'Thank you! Your RSVP has been received. We can’t wait to celebrate with you. ♥');
+          btn.textContent = 'RSVP Sent ♥';
+        } else {
+          throw new Error((res && res.error) || 'unknown');
+        }
+      } catch (err) {
+        showStatus('err', 'Something went wrong sending your RSVP. Please try again, or contact us directly.');
+        btn.disabled = false;
+        btn.textContent = original;
+      }
+    });
+  </script>
+</body>
+</html>
